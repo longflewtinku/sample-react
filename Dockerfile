@@ -1,9 +1,11 @@
-FROM node:24-alpine AS build 
-ADD . /nodeapp
-WORKDIR /nodeapp
+FROM node:25-alpine AS build
+ADD . /app
+WORKDIR /app
 RUN npm install && \
-    npm run build
-FROM nginx:alpine AS runtime 
-LABEL project="nodejsproject"
-COPY --from=build /nodeapp/build   /usr/share/nginx/html
-EXPOSE 80  
+    npm run build 
+
+FROM nginx:1.29.3-alpine AS runtime
+LABEL project="mynodejsproject"
+LABEL author="devopsteam"
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 3000    
