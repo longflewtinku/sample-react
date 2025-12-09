@@ -1,0 +1,11 @@
+FROM node:25.2.1-slim AS build
+ADD . /NODEJSAPP
+WORKDIR /NODEJSAPP 
+RUN npm install && \
+    npm run build 
+
+FROM nginx:1.29.3-alpine AS runtime     
+LABEL project="NODE JS"
+LABEL author="devops team"
+COPY --from=build /NODEJSAPP/build /usr/share/nginx/html 
+EXPOSE 80
